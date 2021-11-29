@@ -1,0 +1,9 @@
+/_build
+/deps
+erl_crash.dump
+*.ez
+/doc
+/bench/results
+/cover
+.idea/
+*.iml
