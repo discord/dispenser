@@ -35,7 +35,7 @@ Two example `GenServer`s are implemented along with the library (see below).
 Append events and add subscription demand in any order, and then use `Buffer.assign_events/1` to assign events to subscribers.
 
 ```elixir
-alias Dispenser.{Buffer, AssignmentStrategy}
+alias Dispenser.{AssignmentStrategy, Buffer}
 
 capacity = 4
 buffer = Buffer.new(AssignmentStrategy.Even, capacity, :drop_newest)
@@ -93,19 +93,23 @@ When a subscribed process unsubscribes or crashes, it is removed from the `Buffe
 Here is a simple example:
 
 ```elixir
-{:ok, buffer} = start_server(%{capacity: 10})
-:ok = BufferServer.ask(buffer, 1)
+alias Dispenser.{AssignmentStrategy, Buffer}
+alias Dispenser.Server.BufferServer
 
-assert BufferServer.stats(buffer) == %{buffered: 0, subscribed: 1, demand: 1}
+capacity = 10
+buffer = Buffer.new(AssignmentStrategy.Even, capacity, :drop_oldest)
+buffer_server = BufferServer.start_link(%{buffer: buffer})
 
-events = Fakes.create_fake_events(10)
-{:ok, 0} = BufferServer.append(buffer, events)
-[first_event | _] = events
+:ok = BufferServer.ask(buffer_server, 1)
 
-assert_receive {:handle_assigned_events, ^buffer, events}
-assert events == [first_event]
+assert BufferServer.stats(buffer_server) == %{buffered: 0, subscribed: 1, demand: 1}
 
-assert BufferServer.stats(buffer) == %{buffered: 9, subscribed: 1, demand: 0}
+events = ["a", "b", "c", "d", "e"]
+{:ok, 0} = BufferServer.append(buffer_server, events)
+
+assert_receive {:handle_assigned_events, ^buffer_server, ["a"]}
+
+assert BufferServer.stats(buffer_server) == %{buffered: 9, subscribed: 1, demand: 0}
 ```
 
 Please see the docs for `BufferServer.ask/3` for more details on the format of the `:handle_assigned_events` message.
