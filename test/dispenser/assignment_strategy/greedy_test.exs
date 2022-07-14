@@ -8,8 +8,10 @@ defmodule Dispenser.AssignmentStrategy.GreedyTest do
   describe "greedy assignment strategy" do
     test "works with a single subscriber with demand to spare" do
       subscription1 = Fakes.create_subscription()
-      demands = Demands.new()
-      |> Demands.add(subscription1, 10)
+
+      demands =
+        Demands.new()
+        |> Demands.add(subscription1, 10)
 
       {assigned_demands, remaining_demands} = AssignmentStrategy.Greedy.assign(demands, 3)
 
@@ -19,8 +21,10 @@ defmodule Dispenser.AssignmentStrategy.GreedyTest do
 
     test "works with a single subscriber without enough demand" do
       subscription1 = Fakes.create_subscription()
-      demands = Demands.new()
-      |> Demands.add(subscription1, 10)
+
+      demands =
+        Demands.new()
+        |> Demands.add(subscription1, 10)
 
       {assigned_demands, remaining_demands} = AssignmentStrategy.Greedy.assign(demands, 15)
 
@@ -33,9 +37,10 @@ defmodule Dispenser.AssignmentStrategy.GreedyTest do
       subscription1 = Fakes.create_subscription()
       subscription2 = Fakes.create_subscription()
 
-      demands = Demands.new()
-      |> Demands.add(subscription1, 10)
-      |> Demands.add(subscription2, 10)
+      demands =
+        Demands.new()
+        |> Demands.add(subscription1, 10)
+        |> Demands.add(subscription2, 10)
 
       {assigned_demands, remaining_demands} = AssignmentStrategy.Greedy.assign(demands, 25)
 
@@ -48,14 +53,17 @@ defmodule Dispenser.AssignmentStrategy.GreedyTest do
       subscription1 = Fakes.create_subscription()
       subscription2 = Fakes.create_subscription()
 
-      demands = Demands.new()
-      |> Demands.add(subscription1, 10)
-      |> Demands.add(subscription2, 10)
+      demands =
+        Demands.new()
+        |> Demands.add(subscription1, 10)
+        |> Demands.add(subscription2, 10)
 
       {assigned_demands, remaining_demands} = AssignmentStrategy.Greedy.assign(demands, 3)
 
       # one of them got the partial demand
-      assert Demands.get(assigned_demands, subscription1) == 3 or Demands.get(assigned_demands, subscription2) == 3
+      assert Demands.get(assigned_demands, subscription1) == 3 or
+               Demands.get(assigned_demands, subscription2) == 3
+
       assert Demands.size(assigned_demands) == 1
 
       # the remaining demands stuck around
@@ -67,9 +75,10 @@ defmodule Dispenser.AssignmentStrategy.GreedyTest do
       subscription1 = Fakes.create_subscription()
       subscription2 = Fakes.create_subscription()
 
-      demands = Demands.new()
-      |> Demands.add(subscription1, 10)
-      |> Demands.add(subscription2, 10)
+      demands =
+        Demands.new()
+        |> Demands.add(subscription1, 10)
+        |> Demands.add(subscription2, 10)
 
       {assigned_demands, remaining_demands} = AssignmentStrategy.Greedy.assign(demands, 16)
 

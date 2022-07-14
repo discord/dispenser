@@ -23,7 +23,12 @@ defmodule Dispenser.AssignmentStrategy.Greedy do
     {assigned_demands, remaining_demands}
   end
 
-  defp do_assign([{subscriber, demand} | other_demands], %Demands{} = assigned_demands, %Demands{} = remaining_demands, event_count) do
+  defp do_assign(
+         [{subscriber, demand} | other_demands],
+         %Demands{} = assigned_demands,
+         %Demands{} = remaining_demands,
+         event_count
+       ) do
     assigned_count = min(demand, event_count)
 
     new_assignments = Demands.add(assigned_demands, subscriber, assigned_count)
