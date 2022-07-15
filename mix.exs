@@ -6,7 +6,7 @@ defmodule Dispenser.Mixfile do
   def project do
     [
       app: :dispenser,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.8",
       elixirc_paths: elixirc_paths(Mix.env()),
       elixirc_options: [warnings_as_errors: ci?()],
